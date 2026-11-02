@@ -64,6 +64,8 @@ class StoreService {
   private payments: PaymentRecord[];
   private inventoryLogs: InventoryMovement[];
   private currentUser: User | null;
+  private listeners: Set<() => void> = new Set();
+  private isSyncing: boolean = false;
 
   constructor() {
     const isClean = localStorage.getItem('amocart_v3_clean_store') === 'true';
@@ -84,6 +86,129 @@ class StoreService {
     this.payments = loadFromStorage(STORAGE_KEYS.PAYMENTS, INITIAL_PAYMENTS);
     this.inventoryLogs = loadFromStorage(STORAGE_KEYS.INVENTORY_LOGS, INITIAL_INVENTORY_LOGS);
     this.currentUser = loadFromStorage(STORAGE_KEYS.CURRENT_USER, null);
+
+    // Initial background sync with central cloud server
+    this.syncWithServer();
+
+    // Re-sync when switching back to tab or on interval for live multi-device updates
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focus', () => {
+        this.syncWithServer();
+      });
+      setInterval(() => {
+        this.syncWithServer();
+      }, 10000);
+    }
+  }
+
+  // --- REACTIVE SUBSCRIBERS ---
+  public subscribe(listener: () => void): () => void {
+    this.listeners.add(listener);
+    return () => {
+      this.listeners.delete(listener);
+    };
+  }
+
+  public notify(): void {
+    this.listeners.forEach((fn) => {
+      try {
+        fn();
+      } catch (e) {
+        console.error('Error in storeService listener:', e);
+      }
+    });
+  }
+
+  // --- CLOUD SERVER SYNCHRONIZATION ---
+  public async syncWithServer(): Promise<void> {
+    if (this.isSyncing) return;
+    this.isSyncing = true;
+    try {
+      const res = await fetch('/api/store/data');
+      if (!res.ok) {
+        this.isSyncing = false;
+        return;
+      }
+      const data = await res.json();
+      if (!data || !data.success) {
+        this.isSyncing = false;
+        return;
+      }
+
+      let changed = false;
+
+      // Auto-migrate local custom edits to freshly initialized server
+      const hasLocalEdits = localStorage.getItem('amocart_has_custom_edits') === 'true';
+      if (hasLocalEdits && Number(data.version) <= 1) {
+        await this.pushAllToServer();
+        this.isSyncing = false;
+        return;
+      }
+
+      if (Array.isArray(data.products) && data.products.length > 0) {
+        if (JSON.stringify(this.products) !== JSON.stringify(data.products)) {
+          this.products = data.products;
+          saveToStorage(STORAGE_KEYS.PRODUCTS, this.products);
+          changed = true;
+        }
+      }
+
+      if (Array.isArray(data.categories) && data.categories.length > 0) {
+        if (JSON.stringify(this.categories) !== JSON.stringify(data.categories)) {
+          this.categories = data.categories;
+          saveToStorage(STORAGE_KEYS.CATEGORIES, this.categories);
+          changed = true;
+        }
+      }
+
+      if (Array.isArray(data.orders)) {
+        if (JSON.stringify(this.orders) !== JSON.stringify(data.orders)) {
+          this.orders = data.orders;
+          saveToStorage(STORAGE_KEYS.ORDERS, this.orders);
+          changed = true;
+        }
+      }
+
+      if (Array.isArray(data.inventoryLogs)) {
+        if (JSON.stringify(this.inventoryLogs) !== JSON.stringify(data.inventoryLogs)) {
+          this.inventoryLogs = data.inventoryLogs;
+          saveToStorage(STORAGE_KEYS.INVENTORY_LOGS, this.inventoryLogs);
+          changed = true;
+        }
+      }
+
+      if (changed) {
+        this.notify();
+      }
+    } catch {
+      // Graceful offline fallback
+    } finally {
+      this.isSyncing = false;
+    }
+  }
+
+  public async pushAllToServer(): Promise<{ success: boolean; message?: string }> {
+    try {
+      const res = await fetch('/api/store/sync-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          products: this.products,
+          categories: this.categories,
+          orders: this.orders,
+          payments: this.payments,
+          inventoryLogs: this.inventoryLogs,
+        }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        localStorage.removeItem('amocart_has_custom_edits');
+        return { success: true, message: 'All changes successfully synchronized across all devices!' };
+      }
+      return { success: false, message: result.error || 'Server rejected synchronization.' };
+    } catch (err: any) {
+      return { success: false, message: err.message || 'Network error syncing with server.' };
+    }
   }
 
   // --- WELCOME POPUP PREFERENCE ---
@@ -207,25 +332,39 @@ class StoreService {
   }
 
   public saveCategory(category: Partial<Category>): Category {
+    let saved: Category;
     if (category.id) {
       const idx = this.categories.findIndex((c) => c.id === category.id);
       if (idx !== -1) {
         this.categories[idx] = { ...this.categories[idx], ...category };
-        saveToStorage(STORAGE_KEYS.CATEGORIES, this.categories);
-        return this.categories[idx];
+        saved = this.categories[idx];
+      } else {
+        saved = category as Category;
       }
+    } else {
+      const newCat: Category = {
+        id: `cat-${Date.now()}`,
+        name: category.name || 'New Category',
+        slug: (category.name || 'new-category').toLowerCase().replace(/\s+/g, '-'),
+        description: category.description || '',
+        isActive: category.isActive !== undefined ? category.isActive : true,
+        itemCount: 0,
+      };
+      this.categories.push(newCat);
+      saved = newCat;
     }
-    const newCat: Category = {
-      id: `cat-${Date.now()}`,
-      name: category.name || 'New Category',
-      slug: (category.name || 'new-category').toLowerCase().replace(/\s+/g, '-'),
-      description: category.description || '',
-      isActive: category.isActive !== undefined ? category.isActive : true,
-      itemCount: 0,
-    };
-    this.categories.push(newCat);
+
+    localStorage.setItem('amocart_has_custom_edits', 'true');
     saveToStorage(STORAGE_KEYS.CATEGORIES, this.categories);
-    return newCat;
+    this.notify();
+
+    fetch('/api/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(saved),
+    }).catch((e) => console.warn('Category sync to server failed:', e));
+
+    return saved;
   }
 
   // --- PRODUCTS ---
@@ -317,7 +456,9 @@ class StoreService {
         const stockDiff = (productData.stock ?? oldProduct.stock) - oldProduct.stock;
 
         this.products[idx] = { ...oldProduct, ...productData };
+        localStorage.setItem('amocart_has_custom_edits', 'true');
         saveToStorage(STORAGE_KEYS.PRODUCTS, this.products);
+        this.notify();
 
         if (stockDiff !== 0) {
           this.logInventoryMovement(
@@ -330,6 +471,12 @@ class StoreService {
             this.products[idx].stock
           );
         }
+
+        fetch('/api/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(this.products[idx]),
+        }).catch((e) => console.warn('Product sync to server failed:', e));
 
         return { success: true, product: this.products[idx] };
       }
@@ -358,7 +505,15 @@ class StoreService {
     };
 
     this.products.unshift(newProd);
+    localStorage.setItem('amocart_has_custom_edits', 'true');
     saveToStorage(STORAGE_KEYS.PRODUCTS, this.products);
+    this.notify();
+
+    fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newProd),
+    }).catch((e) => console.warn('New product sync to server failed:', e));
 
     this.logInventoryMovement(
       newProd.id,
@@ -378,7 +533,14 @@ class StoreService {
     if (idx === -1) return { success: false, error: 'Product not found.' };
 
     this.products.splice(idx, 1);
+    localStorage.setItem('amocart_has_custom_edits', 'true');
     saveToStorage(STORAGE_KEYS.PRODUCTS, this.products);
+    this.notify();
+
+    fetch(`/api/products/${id}`, {
+      method: 'DELETE',
+    }).catch((e) => console.warn('Product delete sync failed:', e));
+
     return { success: true };
   }
 
@@ -398,7 +560,15 @@ class StoreService {
     }
 
     product.stock = newStock;
+    localStorage.setItem('amocart_has_custom_edits', 'true');
     saveToStorage(STORAGE_KEYS.PRODUCTS, this.products);
+    this.notify();
+
+    fetch(`/api/products/${productId}/stock`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: quantityChange, reason, staffEmail: adminEmail }),
+    }).catch((e) => console.warn('Stock adjustment sync failed:', e));
 
     this.logInventoryMovement(
       product.id,
@@ -747,6 +917,20 @@ class StoreService {
 
     this.orders.unshift(newOrder);
     saveToStorage(STORAGE_KEYS.ORDERS, this.orders);
+    this.notify();
+
+    fetch(`/api/orders/${orderId}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus, trackingNumber }),
+    }).catch((e) => console.warn('Order status sync failed:', e));
+    this.notify();
+
+    fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newOrder),
+    }).catch((e) => console.warn('Order sync to server failed:', e));
 
     // Record verified payment
     const paymentRecord: PaymentRecord = {
@@ -837,6 +1021,13 @@ class StoreService {
     }
 
     saveToStorage(STORAGE_KEYS.ORDERS, this.orders);
+    this.notify();
+
+    fetch(`/api/orders/${orderId}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus, trackingNumber }),
+    }).catch((e) => console.warn('Order status sync failed:', e));
     return { success: true, order };
   }
 
@@ -862,6 +1053,13 @@ class StoreService {
     }
 
     saveToStorage(STORAGE_KEYS.ORDERS, this.orders);
+    this.notify();
+
+    fetch(`/api/orders/${orderId}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus, trackingNumber }),
+    }).catch((e) => console.warn('Order status sync failed:', e));
     return { success: true };
   }
 

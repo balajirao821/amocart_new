@@ -23,6 +23,7 @@ RUN npm install --omit=dev
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/server.ts ./server.ts
 COPY --from=builder /app/src ./src
+COPY --from=builder /app/data_storage ./data_storage
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
 
 EXPOSE 3000

@@ -116,7 +116,9 @@ export default function App() {
     return () => clearInterval(timer);
   }, [HERO_SLIDES.length]);
 
-  // Initialize data on mount
+  const [, setStoreVersion] = useState(0);
+
+  // Initialize data on mount & subscribe to real-time cross-device updates
   useEffect(() => {
     const user = storeService.getCurrentUser();
     setCurrentUser(user);
@@ -126,6 +128,13 @@ export default function App() {
     if (!storeService.isWelcomePopupDismissed()) {
       setIsWelcomeOpen(true);
     }
+
+    const unsubscribe = storeService.subscribe(() => {
+      setStoreVersion((v) => v + 1);
+      setCart(storeService.getCart());
+      setCurrentUser(storeService.getCurrentUser());
+    });
+    return unsubscribe;
   }, []);
 
   const refreshCart = () => {
@@ -135,6 +144,7 @@ export default function App() {
   const refreshUserData = () => {
     setCurrentUser(storeService.getCurrentUser());
     refreshCart();
+    setStoreVersion((v) => v + 1);
   };
 
   // Welcome Modal actions

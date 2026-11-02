@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Product, Category, Order, OrderStatus, InventoryMovement } from '../types';
 import { storeService } from '../services/storeService';
 import {
@@ -20,6 +20,8 @@ import {
   Trash2,
   Shield,
   FileSpreadsheet,
+  CloudUpload,
+  RefreshCw,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -140,6 +142,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     );
   }
 
+  const [, setStoreVersion] = useState(0);
+  const [isSyncingCloud, setIsSyncingCloud] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = storeService.subscribe(() => {
+      setStoreVersion((v) => v + 1);
+    });
+    return unsubscribe;
+  }, []);
+
   // Load real database data
   const summary = storeService.getAnalyticsSummary();
   const products = storeService.getProducts({ activeOnly: false });
@@ -153,6 +165,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const showNotice = (message: string, isError = false) => {
     setFeedbackNotice({ message, isError });
     setTimeout(() => setFeedbackNotice(null), 4000);
+  };
+
+  const handleSyncToCloud = async () => {
+    setIsSyncingCloud(true);
+    const res = await storeService.pushAllToServer();
+    setIsSyncingCloud(false);
+    showNotice(res.message || 'Synced to cloud server successfully!', !res.success);
+    onRefreshData();
   };
 
   // CSV Report Export
@@ -289,6 +309,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export CSV</span>
+          </button>
+          <button
+            onClick={handleSyncToCloud}
+            disabled={isSyncingCloud}
+            className="px-3.5 py-2 text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-300 hover:bg-emerald-100 rounded-xl transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer"
+            title="Sync all products & categories to cloud so all devices see updates"
+          >
+            <CloudUpload className={`w-3.5 h-3.5 ${isSyncingCloud ? 'animate-bounce text-emerald-600' : 'text-emerald-700'}`} />
+            <span>{isSyncingCloud ? 'Syncing...' : 'Sync to Cloud'}</span>
           </button>
           <button
             onClick={() => {
