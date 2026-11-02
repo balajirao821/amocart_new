@@ -1,0 +1,6 @@
+{
+  "name": "AmoCart — Full-Stack E-Commerce Platform",
+  "description": "Production-grade e-commerce application with customer storefront, session cart, Razorpay payment verification, customer order tracking, and administrator management dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

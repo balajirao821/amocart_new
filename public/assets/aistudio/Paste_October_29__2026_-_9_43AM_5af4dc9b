@@ -1,0 +1,1271 @@
+# PROJECT: AMOCART — FULL-STACK E-COMMERCE WEB APPLICATION
+
+## 1. ROLE AND OBJECTIVE
+
+Act as a senior full-stack Django developer, database architect, UI/UX designer, security engineer, and payment integration specialist.
+
+Build a complete, professional, production-oriented e-commerce web application named **AmoCart**.
+
+The application must allow customers to browse products without logging in, create accounts using email, securely log in, add products to their cart, place orders, make payments using Razorpay, and track their orders.
+
+The application must also include a powerful administrator dashboard to manage products, inventory, customers, orders, payments, sales analytics, and business performance.
+
+Do not create just a static website or UI prototype. Build a functional application with a real database, working authentication, server-side validation, complete order workflows, and payment verification.
+
+All major buttons, forms, filters, navigation links, and dashboard actions must work correctly.
+
+---
+
+## 2. TECHNOLOGY STACK
+
+Use the following technologies:
+
+### Backend
+- Python
+- Django
+- Django ORM
+- Django authentication system
+- Django sessions and messages
+- Django REST Framework only where an API is useful
+
+### Database
+- MySQL
+- Use environment variables for database credentials.
+- Create proper models, relationships, migrations, constraints, and indexes.
+- Use Django ORM for database operations.
+
+### Frontend
+- HTML5
+- CSS3
+- JavaScript
+- Django Templates
+- Bootstrap 5 or a well-organized custom CSS design system
+- Chart.js for analytics charts
+
+### Payment Gateway
+- Razorpay Checkout
+- Razorpay Orders API
+- Server-side payment signature verification
+- Razorpay webhooks for payment event handling
+
+### Supporting Technologies
+- Pillow for product image processing
+- python-dotenv or django-environ for environment configuration
+- Django email backend for authentication emails and order notifications
+- Git for version control
+
+Use stable, compatible package versions.
+
+---
+
+## 3. BRAND IDENTITY AND DESIGN
+
+Website name: AmoCart
+
+Brand personality:
+- Modern
+- Professional
+- Trustworthy
+- Minimal
+- Fast and responsive
+- Suitable for a real online shopping business
+
+Design requirements:
+
+1. Create a professional logo or text-based AmoCart brand mark.
+2. Use a clean white background with a modern primary color palette.
+3. Use a consistent typography system, spacing, buttons, cards, shadows, and border radii.
+4. Create a responsive layout for desktop, tablet, and mobile.
+5. Add a professional header with:
+   - AmoCart logo
+   - Home
+   - Shop
+   - Categories
+   - Search bar
+   - Account
+   - Wishlist, if implemented
+   - Shopping cart with item count
+6. Create a responsive footer containing:
+   - About AmoCart
+   - Contact information
+   - Customer support
+   - Shipping policy
+   - Return and refund policy
+   - Privacy policy
+   - Terms and conditions
+7. Add loading indicators, empty states, validation messages, success messages, and error messages.
+8. Use optimized product images and avoid unnecessary animations.
+9. Ensure buttons have clear hover, focus, and disabled states.
+10. Maintain consistent design across the storefront, checkout, login pages, and admin dashboard.
+
+Do not make the application look like a basic college project. It should resemble a professional e-commerce platform.
+
+---
+
+## 4. FIRST-VISIT WELCOME POPUP
+
+When a visitor opens the AmoCart website for the first time, display a centered modal popup.
+
+Title:
+"Welcome to AmoCart!"
+
+Subtitle:
+"Discover products you'll love."
+
+Display two primary actions:
+
+### Option A: Continue Without Login
+Button text: "Continue Without Login"
+
+Behavior:
+- Close the popup.
+- Allow the visitor to browse products without creating an account.
+- Allow product searches, category browsing, product detail viewing, and adding products to a session-based cart.
+- Do not require authentication for public shopping pages.
+
+### Option B: Sign In with Email
+Button text: "Sign In with Email"
+
+Behavior:
+- Open the login or authentication page.
+- Allow existing users to sign in using their email and password.
+- Provide a link to create a new account.
+- Provide a forgot-password flow.
+
+Popup behavior:
+- Display the popup on the visitor's first visit.
+- Store the visitor's dismissal preference using localStorage or an appropriate session mechanism.
+- Do not display the popup on every page navigation.
+- Allow the visitor to open the login page later from the account icon.
+- On subsequent visits, respect the saved preference according to the chosen persistence policy.
+
+Security requirements:
+- localStorage may store the popup preference, but must never store passwords, payment secrets, or authentication tokens unnecessarily.
+- Authentication must be managed securely by Django.
+
+---
+
+## 5. CUSTOMER AUTHENTICATION
+
+Implement complete customer authentication.
+
+### Registration page
+
+Fields:
+- Full name
+- Email address
+- Password
+- Confirm password
+- Optional phone number
+
+Requirements:
+- Validate email addresses.
+- Enforce unique email addresses.
+- Validate password strength.
+- Ensure both passwords match.
+- Hash passwords using Django's authentication system.
+- Display clear validation errors.
+- Send an email verification link if email verification is enabled.
+- Prevent duplicate accounts.
+
+Use a custom Django user model with email as the unique login identifier. Configure this model before creating the initial migrations.
+
+### Login page
+
+Fields:
+- Email
+- Password
+
+Requirements:
+- Authenticate against the database.
+- Display meaningful error messages.
+- Maintain secure login sessions.
+- Redirect users to their intended destination when appropriate.
+- Prevent unauthorized access to customer-specific pages.
+
+### Additional authentication features
+- Logout
+- Forgot password
+- Password reset through a secure, time-limited email link
+- Email verification
+- Account profile management
+- Change password
+- Account address management
+
+Use Django's built-in authentication and password hashing mechanisms.
+
+Never store passwords in plain text.
+
+---
+
+## 6. PRODUCT STOREFRONT
+
+Create a complete shopping interface.
+
+### Home page
+
+Include:
+- Hero banner
+- Search bar
+- Featured products
+- Latest arrivals
+- Best-selling products
+- Product categories
+- Special offers, where applicable
+- Product recommendations based on available data
+- Footer
+
+### Product listing page
+
+Display product cards with:
+- Product image
+- Product name
+- Current price
+- Original price, if discounted
+- Discount percentage, when applicable
+- Stock availability
+- Rating, only if a genuine review system exists
+- View Details button
+- Add to Cart button
+
+Features:
+- Search by product name.
+- Filter by category.
+- Filter by minimum and maximum price.
+- Sort by price.
+- Sort by newest.
+- Sort by popularity when sufficient data is available.
+- Pagination.
+- Display a friendly message when no products match the filters.
+
+### Product details page
+
+Display:
+- Product images
+- Product name
+- Full description
+- Price
+- Available stock
+- Category
+- Quantity selector
+- Add to Cart
+- Related products
+
+Validate stock availability before accepting a requested quantity.
+
+Do not allow customers to purchase inactive or unavailable products.
+
+### Product categories
+
+Create a category management system with:
+- Category name
+- Unique slug
+- Description
+- Optional category image
+- Active/inactive status
+
+Administrators should be able to manage categories from the admin dashboard.
+
+---
+
+## 7. SHOPPING CART
+
+Implement a functional shopping cart.
+
+Allow both anonymous visitors and authenticated users to add products to their carts.
+
+### Anonymous cart
+- Store cart information in the Django session.
+- Do not require login just to add products.
+- Preserve the cart while the session remains valid.
+
+### Authenticated cart
+- Persist cart data in the database.
+- Allow customers to view their saved cart across authenticated sessions.
+
+### Cart features
+- Add products.
+- Remove products.
+- Increase quantity.
+- Decrease quantity.
+- Validate available stock.
+- Display product subtotal.
+- Display total item count.
+- Calculate the cart subtotal.
+- Display shipping charges where applicable.
+- Calculate applicable discounts.
+- Calculate the final payable amount.
+- Display an empty-cart page when no items exist.
+
+### Cart merging
+
+When an anonymous visitor logs in:
+- Merge the session cart with the authenticated customer's cart.
+- Combine matching product quantities where appropriate.
+- Revalidate current product availability and stock.
+- Avoid exceeding available inventory.
+- Notify the customer if a cart item is no longer available.
+
+Calculate all prices on the server using current database values. Never trust prices submitted by the browser.
+
+---
+
+## 8. CHECKOUT AND LOGIN REQUIREMENT
+
+Browsing must remain available without authentication.
+
+However, **the customer must sign in before completing checkout and purchasing a product**.
+
+Implement the following workflow:
+
+1. Visitor opens AmoCart.
+2. Visitor selects "Continue Without Login".
+3. Visitor browses products.
+4. Visitor adds products to the cart.
+5. Visitor clicks "Proceed to Checkout".
+6. If not authenticated, redirect the visitor to the login page.
+7. Display a message explaining that login is required to complete the purchase.
+8. Provide login and registration options.
+9. After successful authentication, return the customer to checkout.
+10. Preserve the cart during authentication.
+11. Collect or confirm shipping information.
+12. Display the order summary.
+13. Revalidate inventory and calculate the final amount on the server.
+14. Create a pending order and initiate Razorpay payment.
+15. Open Razorpay Checkout.
+16. Verify the payment securely on the server.
+17. Mark the order as paid only after successful verification.
+18. Display an order confirmation page.
+19. Allow the customer to view the order in their account.
+
+If payment fails, is cancelled, or remains incomplete:
+- Do not mark the order as paid.
+- Show a clear status message.
+- Allow the customer to retry payment when appropriate.
+- Prevent accidental duplicate orders and duplicate charges.
+
+Use POST requests for state-changing actions and protect them with Django CSRF protection.
+
+---
+
+## 9. CUSTOMER ACCOUNT DASHBOARD
+
+Create a customer dashboard accessible only after login.
+
+### Dashboard sections
+
+1. Account overview
+2. Personal information
+3. Saved addresses
+4. My Orders
+5. Order details
+6. Payment history
+7. Password and security settings
+8. Logout
+
+### Customer profile
+
+Display:
+- Full name
+- Email
+- Phone number, if provided
+- Account creation date
+- Saved addresses
+
+Allow customers to update their permitted profile fields.
+
+Email changes must use an appropriate verification process.
+
+### My Orders
+
+Display:
+- Order number
+- Order date
+- Number of items
+- Total amount
+- Payment status
+- Order status
+- Track Order button
+- View Details button
+
+Customers must only be able to view their own orders.
+
+---
+
+## 10. ORDER MANAGEMENT AND TRACKING
+
+Create a complete order management system.
+
+### Order model
+
+Include appropriate fields such as:
+- Unique order number
+- Customer
+- Order creation timestamp
+- Shipping address snapshot
+- Billing address, if required
+- Subtotal
+- Shipping fee
+- Discount
+- Final amount
+- Payment status
+- Order status
+- Payment reference
+- Tracking number, if available
+- Updated timestamp
+
+### Order statuses
+
+Use clearly defined statuses such as:
+- Pending Payment
+- Confirmed
+- Processing
+- Packed
+- Shipped
+- Out for Delivery
+- Delivered
+- Cancelled
+- Return Requested
+- Returned
+- Refund Processing
+- Refunded
+
+Only allow valid status transitions.
+
+Do not treat order status and payment status as the same thing.
+
+### Order items
+
+Store:
+- Order reference
+- Product reference where appropriate
+- Product name snapshot
+- Unit price snapshot
+- Quantity
+- Line total
+
+Preserve the purchase-time price and product name even if the administrator later edits the product.
+
+### Tracking page
+
+Display a visual order progress timeline.
+
+Example:
+Order Placed → Confirmed → Processing → Shipped → Out for Delivery → Delivered
+
+Show timestamps for recorded events.
+
+If a shipping carrier or tracking integration is not configured, display the order's internal tracking status rather than inventing live delivery information.
+
+### Administrator order actions
+
+Allow authorized administrators to:
+- View all orders.
+- Search by order number.
+- Filter by order status.
+- Filter by payment status.
+- Filter by date.
+- View customer and shipping information.
+- Update order status.
+- Record tracking numbers.
+- Review cancellation requests.
+- Process eligible refunds through the appropriate Razorpay workflow.
+- View order history and payment references.
+
+Record important order-status changes in an order event history.
+
+---
+
+## 11. RAZORPAY PAYMENT INTEGRATION
+
+Integrate Razorpay as the payment gateway.
+
+Support the payment methods enabled for the merchant's Razorpay account.
+
+### Required payment workflow
+
+1. Customer must be authenticated.
+2. Customer proceeds to checkout.
+3. Server recalculates the final order amount.
+4. Server validates stock and order details.
+5. Server creates a pending order.
+6. Server creates a Razorpay order using the Razorpay Orders API.
+7. Return only the required public checkout details to the frontend.
+8. Open Razorpay Checkout.
+9. Customer completes or cancels the payment.
+10. Receive the payment response.
+11. Verify the Razorpay payment signature on the server using the official SDK.
+12. Update payment and order records only after appropriate verification.
+13. Display the payment result.
+14. Clear or update the cart according to the verified order state.
+
+### Security requirements
+
+- Keep RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in environment variables.
+- Never expose the Razorpay secret in HTML, JavaScript, API responses, or source control.
+- Calculate payment amounts on the server.
+- Convert amounts to the correct integer subunit representation.
+- Verify the payment signature server-side.
+- Use the official Razorpay SDK.
+- Implement webhook signature verification using the raw request body and configured webhook secret.
+- Make payment webhook processing idempotent.
+- Handle duplicate webhook deliveries safely.
+- Prevent payment amount tampering.
+- Prevent unauthorized order access.
+- Record payment references and transaction status.
+- Do not trust the frontend's success callback alone as proof of payment.
+
+### Payment statuses
+
+Use appropriate statuses such as:
+- Created
+- Pending
+- Authorized
+- Captured
+- Failed
+- Refunded
+
+Handle asynchronous payment events and reconcile order state safely.
+
+### Inventory and payment consistency
+
+Implement a safe inventory strategy.
+
+- Validate stock before creating an order.
+- Reserve or decrement stock according to a clearly defined transaction strategy.
+- Prevent concurrent purchases from overselling stock.
+- Use database transactions and row locking where appropriate.
+- Release expired reservations when supported by the chosen design.
+- Restore inventory when a cancellation or refund policy requires it.
+- Avoid double-decrementing stock when payment callbacks or webhooks are repeated.
+
+Clearly document the selected inventory reservation and payment confirmation workflow.
+
+### Testing
+
+Use Razorpay test mode during development.
+
+Provide instructions for configuring test credentials and testing successful payments, failed payments, cancelled checkouts, duplicate webhook events, and payment verification errors.
+
+Do not claim that a real payment is successful until the server has verified the applicable payment evidence.
+
+---
+
+## 12. ADMINISTRATOR DASHBOARD
+
+Create a professional custom admin dashboard for AmoCart.
+
+Use Django's permission system and authenticated administrative access.
+
+The dashboard should be separate from the customer-facing shopping interface.
+
+### Dashboard layout
+
+Sidebar:
+- Dashboard
+- Products
+- Categories
+- Inventory
+- Customers
+- Orders
+- Payments
+- Analytics
+- Reports
+- Settings
+- Logout
+
+Top navigation:
+- AmoCart Admin
+- Search
+- Notifications, if implemented
+- Administrator profile
+
+### Dashboard summary cards
+
+Display:
+- Total products
+- Active products
+- Low-stock products
+- Out-of-stock products
+- Total registered customers
+- Total orders
+- Pending orders
+- Paid orders
+- Gross sales
+- Net sales or net revenue, when properly calculated
+- Refund totals
+
+Each metric must be calculated from actual database records.
+
+Do not use hardcoded sample statistics in the finished application.
+
+### Product management
+
+Administrators must be able to:
+- Add products.
+- Edit products.
+- Delete products with appropriate safeguards.
+- Upload product images.
+- Manage product descriptions.
+- Set product prices.
+- Set sale prices where applicable.
+- Assign categories.
+- Set stock quantity.
+- Set low-stock thresholds.
+- Activate or deactivate products.
+- Search products.
+- Filter by category and availability.
+- Sort and paginate results.
+
+### Inventory management
+
+Display:
+- Product name
+- SKU
+- Available stock
+- Reserved stock, if reservations are implemented
+- Low-stock threshold
+- Stock status
+- Last updated timestamp
+
+Stock status:
+- In Stock
+- Low Stock
+- Out of Stock
+
+Provide stock adjustment actions with:
+- Product
+- Quantity change
+- Reason for adjustment
+- Administrator
+- Timestamp
+
+Maintain an inventory movement history.
+
+Prevent negative inventory.
+
+Use appropriate database transactions when updating stock.
+
+### Customer management
+
+Administrators must be able to:
+- View registered customers.
+- Search by name or email.
+- View account creation date.
+- View the customer's order count.
+- View total spending from eligible orders.
+- View customer order history.
+- View permitted profile and shipping information.
+- Activate or deactivate accounts where appropriate and legally permissible.
+
+Do not display customer passwords or payment secrets.
+
+Restrict customer information to authorized administrators.
+
+### Order management
+
+Provide searchable, filterable order tables with:
+- Order number
+- Customer
+- Order date
+- Total amount
+- Payment status
+- Order status
+- Available administrative actions
+
+### Payment management
+
+Display:
+- Internal payment record
+- Order number
+- Customer
+- Amount
+- Gateway
+- Gateway payment ID
+- Payment status
+- Payment timestamp
+- Refund status
+
+Never display secret API keys or sensitive payment credentials.
+
+### Admin permissions
+
+- Protect every admin view with authentication and permission checks.
+- Prevent ordinary customers from accessing admin routes.
+- Use staff permissions or appropriate custom permissions.
+- Ensure only authorized users can change prices, stock, orders, and payment-related records.
+- Do not rely on hiding admin buttons as a security mechanism.
+
+Use Django Admin for reliable backend administration where helpful, but also build the requested custom dashboard.
+
+---
+
+## 13. ANALYTICS AND BUSINESS REPORTS
+
+Implement an analytics section using real database data.
+
+Use Chart.js for charts.
+
+### Sales analytics
+
+Display:
+- Daily sales
+- Weekly sales
+- Monthly sales
+- Yearly sales
+- Sales over a selected date range
+- Order count
+- Average order value
+- Refund totals
+- Sales by category
+- Top-selling products
+- Low-stock products
+
+### Customer analytics
+
+Display:
+- Total registered customers
+- New registrations over time
+- Customers with orders
+- Repeat customers, based on actual order history
+
+### Order analytics
+
+Display:
+- Orders by status
+- Paid versus unpaid orders
+- Cancelled orders
+- Delivered orders
+- Return and refund statistics
+
+### Analytics rules
+
+- Use Django ORM aggregation and database queries.
+- Support date-range filtering.
+- Exclude failed and unpaid orders from recognized sales.
+- Define whether metrics represent gross sales, net sales, or collected payments.
+- Account for refunds and cancellations according to clearly documented definitions.
+- Avoid counting duplicate payment events.
+- Optimize queries and use pagination for large tables.
+- Do not present invented data as real analytics.
+
+Provide downloadable CSV reports for authorized administrators where appropriate.
+
+---
+
+## 14. DATABASE DESIGN
+
+Design a normalized database using appropriate Django models.
+
+Include the following entities as needed:
+
+1. CustomUser
+2. CustomerProfile
+3. Address
+4. Category
+5. Product
+6. ProductImage
+7. Cart
+8. CartItem
+9. Order
+10. OrderItem
+11. OrderEvent
+12. Payment
+13. Refund
+14. InventoryMovement
+15. WebhookEvent
+16. Coupon, if implemented
+17. ProductReview, if implemented
+18. Wishlist, if implemented
+
+Define appropriate:
+- Primary keys
+- Foreign keys
+- Unique constraints
+- Database indexes
+- Check constraints
+- Decimal fields for currency
+- Timestamps
+- Relationships
+- Deletion policies
+
+Use DecimalField for prices and monetary calculations.
+
+Do not use floating-point numbers for financial calculations.
+
+Use appropriate database transactions for order creation, stock reservation, and payment processing.
+
+Configure the custom user model before the initial migration.
+
+Provide complete Django model definitions and explain how the entities relate to each other.
+
+---
+
+## 15. APPLICATION STRUCTURE
+
+Organize the Django project into maintainable applications.
+
+Suggested structure:
+
+amocart/
+    manage.py
+    requirements.txt
+    .env.example
+
+    config/
+        __init__.py
+        settings.py
+        urls.py
+        wsgi.py
+        asgi.py
+
+    accounts/
+        models.py
+        forms.py
+        views.py
+        urls.py
+        admin.py
+        tests.py
+
+    store/
+        models.py
+        views.py
+        urls.py
+        admin.py
+        tests.py
+
+    cart/
+        services.py
+        views.py
+        urls.py
+        tests.py
+
+    orders/
+        models.py
+        services.py
+        views.py
+        urls.py
+        tests.py
+
+    payments/
+        models.py
+        services.py
+        views.py
+        urls.py
+        webhooks.py
+        tests.py
+
+    inventory/
+        models.py
+        services.py
+        views.py
+        urls.py
+        tests.py
+
+    dashboard/
+        views.py
+        urls.py
+        services.py
+        tests.py
+
+    analytics/
+        views.py
+        urls.py
+        services.py
+        tests.py
+
+    templates/
+        base.html
+        includes/
+        accounts/
+        store/
+        cart/
+        checkout/
+        orders/
+        dashboard/
+        emails/
+
+    static/
+        css/
+        js/
+        images/
+
+    media/
+        products/
+
+    tests/
+
+You may improve this structure when necessary, but maintain clear separation of responsibilities.
+
+Do not place the entire application in a single views.py file.
+
+Keep payment processing, order creation, inventory changes, and analytics logic in reusable service functions where appropriate.
+
+---
+
+## 16. URLS AND NAVIGATION
+
+Create clean, named Django URL patterns for:
+
+Public pages:
+- /
+- /shop/
+- /categories/
+- /category/<slug>/
+- /product/<slug>/
+- /search/
+
+Authentication:
+- /accounts/register/
+- /accounts/login/
+- /accounts/logout/
+- /accounts/password-reset/
+
+Cart and checkout:
+- /cart/
+- /cart/add/<product_id>/
+- /cart/update/<item_id>/
+- /cart/remove/<item_id>/
+- /checkout/
+- /checkout/create-order/
+- /payments/verify/
+
+Customer:
+- /account/
+- /account/profile/
+- /account/addresses/
+- /account/orders/
+- /account/orders/<order_number>/
+- /account/orders/<order_number>/track/
+
+Admin:
+- /admin-dashboard/
+- /admin-dashboard/products/
+- /admin-dashboard/categories/
+- /admin-dashboard/inventory/
+- /admin-dashboard/customers/
+- /admin-dashboard/orders/
+- /admin-dashboard/payments/
+- /admin-dashboard/analytics/
+- /admin-dashboard/reports/
+
+Webhook:
+- /payments/webhook/
+
+Use Django's URL reversing instead of hardcoding internal links throughout the templates.
+
+Use suitable HTTP methods and authorization for each endpoint.
+
+---
+
+## 17. SECURITY REQUIREMENTS
+
+Follow Django security best practices.
+
+Implement:
+- CSRF protection
+- Secure session handling
+- Secure password hashing
+- Server-side form validation
+- Authentication and authorization checks
+- Secure file upload validation
+- Safe image handling
+- Protection against SQL injection through Django ORM
+- Protection against XSS through appropriate template escaping
+- Rate limiting for sensitive authentication and payment endpoints where appropriate
+- Environment-based secret management
+- Secure production settings
+- HTTPS in production
+- Secure cookies in production
+- Appropriate access controls for customer records
+- Payment signature verification
+- Webhook signature verification
+- Protection against duplicate orders and duplicate payment processing
+
+Never:
+- Commit .env files containing real secrets.
+- Trust frontend prices.
+- Expose Razorpay secrets.
+- Mark an order paid based only on a browser redirect.
+- Allow one customer to view another customer's orders.
+- Allow unauthorized stock or payment modifications.
+- Store raw card details.
+- Disable security protections to make a feature work.
+
+Provide an example .env.example with placeholder values only.
+
+---
+
+## 18. EMAIL NOTIFICATIONS
+
+Implement configurable email notifications for:
+- Email verification
+- Password reset
+- Order confirmation
+- Payment confirmation
+- Order shipment
+- Delivery confirmation
+- Cancellation and refund updates, where appropriate
+
+Use Django's email framework.
+
+For development, provide console email backend instructions.
+
+For production, explain how to configure an SMTP provider using environment variables.
+
+Do not hardcode email credentials.
+
+---
+
+## 19. ERROR HANDLING AND USER EXPERIENCE
+
+Implement:
+- Custom 404 page
+- Custom 500 page
+- Empty-cart page
+- No-products-found state
+- Payment failure page
+- Order confirmation page
+- Login-required checkout redirect
+- Friendly stock error messages
+- Clear form validation
+- Database and payment error logging
+- User-friendly error messages without leaking internal exceptions
+
+Preserve valid form data when validation fails.
+
+Use Django messages for user-facing success and error notifications.
+
+Avoid exposing stack traces or secret information to customers.
+
+---
+
+## 20. TESTING REQUIREMENTS
+
+Create automated tests for the important workflows.
+
+### Authentication tests
+- Registration
+- Duplicate email rejection
+- Login
+- Logout
+- Password reset
+- Unauthorized access restrictions
+
+### Store tests
+- Product listing
+- Product search
+- Category filtering
+- Product details
+- Inactive product restrictions
+
+### Cart tests
+- Adding products
+- Updating quantities
+- Removing products
+- Stock validation
+- Anonymous cart merging
+
+### Checkout and order tests
+- Checkout requires authentication.
+- Cart is preserved after login.
+- Order amount is calculated on the server.
+- Stock cannot be oversold.
+- Customer cannot access another customer's order.
+- Failed payments do not create paid orders.
+- Repeated payment events do not duplicate inventory changes.
+
+### Razorpay tests
+- Payment order creation
+- Signature verification
+- Invalid signature rejection
+- Webhook signature verification
+- Duplicate webhook handling
+- Payment failure
+- Refund state transitions
+
+Mock external payment calls in automated tests.
+
+Do not require real payment credentials to run the normal test suite.
+
+### Admin tests
+- Unauthorized access is rejected.
+- Product management requires appropriate permissions.
+- Inventory changes are recorded.
+- Order status updates are validated.
+- Analytics calculations use the correct records.
+
+Provide commands to run all tests.
+
+---
+
+## 21. IMPLEMENTATION INSTRUCTIONS
+
+Build the application in manageable phases.
+
+### Phase 1: Project setup
+- Create the Django project.
+- Create all required applications.
+- Configure MySQL.
+- Configure environment variables.
+- Define the custom user model.
+- Configure static and media files.
+- Create initial migrations.
+
+### Phase 2: Authentication
+- Implement registration and login.
+- Implement password reset.
+- Build the welcome popup.
+- Add anonymous browsing.
+- Add customer account pages.
+
+### Phase 3: Storefront
+- Implement categories.
+- Implement product models.
+- Build the home page.
+- Build product listing and detail pages.
+- Implement search and filters.
+
+### Phase 4: Cart and checkout
+- Implement session-based anonymous carts.
+- Implement persistent customer carts.
+- Implement cart merging.
+- Build checkout.
+- Require login before purchase.
+- Implement order creation and inventory protection.
+
+### Phase 5: Razorpay
+- Integrate Razorpay Checkout.
+- Create Razorpay orders on the server.
+- Implement payment verification.
+- Implement webhooks.
+- Implement payment failure handling.
+- Test duplicate events and payment retries.
+
+### Phase 6: Orders and tracking
+- Build order history.
+- Implement order details.
+- Implement order-status timelines.
+- Build the administrative order workflow.
+- Implement cancellation and refund handling.
+
+### Phase 7: Admin dashboard
+- Implement product management.
+- Implement inventory management.
+- Implement customer management.
+- Implement order management.
+- Implement payment management.
+- Implement permissions.
+
+### Phase 8: Analytics
+- Implement sales analytics.
+- Implement order analytics.
+- Implement customer analytics.
+- Implement reports and CSV exports.
+
+### Phase 9: UI polish and testing
+- Improve responsive design.
+- Add loading and empty states.
+- Test forms and navigation.
+- Test payment workflows.
+- Test authorization.
+- Run the complete automated test suite.
+
+### Phase 10: Deployment
+- Prepare production settings.
+- Configure the production database.
+- Configure static and media storage.
+- Configure HTTPS.
+- Configure email.
+- Configure Razorpay production credentials.
+- Configure webhook endpoints.
+- Document deployment and backup procedures.
+
+---
+
+## 22. CODE GENERATION RULES
+
+Follow these rules throughout development.
+
+1. Generate actual working Django code, not pseudocode.
+2. Do not skip important files.
+3. Do not replace core functionality with comments such as "implement this later".
+4. Provide complete code for each requested file.
+5. Include imports and correct model references.
+6. Keep URL names consistent with template references.
+7. Ensure templates extend the correct base template.
+8. Ensure model fields match the forms, views, and templates.
+9. Include migrations instructions after model changes.
+10. Explain where each file must be created.
+11. Provide exact Windows PowerShell commands where applicable.
+12. Include a requirements.txt.
+13. Include a .env.example.
+14. Include MySQL database creation instructions.
+15. Include a superuser creation command.
+16. Include test commands.
+17. Explain how to configure Razorpay test credentials.
+18. Do not use SQLite as the main database; use MySQL.
+19. Do not hardcode administrator credentials.
+20. Do not invent payment success responses or fake business analytics.
+21. Use Django Admin in addition to the custom dashboard where helpful.
+22. Do not introduce React unless explicitly requested; use Django Templates, HTML, CSS, and JavaScript.
+23. Avoid unnecessary packages and duplicated logic.
+24. Explain important security and inventory decisions.
+25. Ensure each phase integrates with the code generated in earlier phases.
+
+If the response becomes too long, divide implementation into numbered parts. Finish each part with the exact filenames completed and the next files to generate. Maintain consistency across all parts.
+
+Do not restart the project or rename existing models unexpectedly in subsequent parts.
+
+---
+
+## 23. ACCEPTANCE CRITERIA
+
+The application is considered complete only when all of the following work:
+
+1. A visitor can open AmoCart and see the welcome popup.
+2. The visitor can continue without login.
+3. The visitor can browse, search, filter, and view products.
+4. The visitor can add products to a cart without logging in.
+5. The visitor is required to log in before completing checkout.
+6. The cart is preserved after login.
+7. An authenticated customer can enter shipping details.
+8. The server calculates the final order amount.
+9. Razorpay Checkout opens with the correct amount.
+10. Payment is verified securely on the server.
+11. Successful verified payments update the appropriate records.
+12. Failed payments do not incorrectly mark orders as paid.
+13. Customers can view their own orders and track their statuses.
+14. Administrators can add, edit, and manage products.
+15. Inventory is updated safely without overselling.
+16. Administrators can view customer information and order history.
+17. Administrators can update order statuses.
+18. Administrators can view payment records.
+19. Analytics use real database data.
+20. Unauthorized users cannot access administrative features.
+21. Customer data and payment secrets are protected.
+22. The website works on desktop and mobile.
+23. Automated tests cover the core business workflows.
+24. The application can be started locally using the documented instructions.
+
+---
+
+## 24. START THE IMPLEMENTATION
+
+Begin by producing:
+
+1. The complete project architecture.
+2. A list of required Python packages.
+3. The Windows PowerShell setup commands.
+4. MySQL database setup instructions.
+5. The Django settings configuration.
+6. The custom user model and authentication configuration.
+7. The initial database models.
+8. The URL architecture.
+9. The implementation sequence.
+
+Then start generating the actual application code phase by phase.
+
+Prioritize a secure, maintainable, fully functional AmoCart application over a superficial visual demo.
+
+Make sensible implementation decisions when details are unspecified, document those decisions, and keep the application consistent from the first file to the last.

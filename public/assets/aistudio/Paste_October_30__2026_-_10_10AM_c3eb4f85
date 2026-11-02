@@ -1,0 +1,1120 @@
+# PROJECT: AMOCART — COMPLETE E-COMMERCE UI REDESIGN
+
+## 1. ROLE
+
+Act as a senior UI/UX designer, frontend engineer, Django developer, and e-commerce design specialist.
+
+Redesign the existing AmoCart e-commerce website with a modern, professional shopping experience inspired by the layout, usability, navigation, and product discovery experience of Flipkart.
+
+The final design must look like a polished, real-world Indian e-commerce platform.
+
+IMPORTANT:
+- Use Flipkart as a UI/UX reference only.
+- Maintain the unique AmoCart brand identity.
+- Do not copy Flipkart's logo, exact branding, proprietary assets, or identity.
+- Do not rebuild the application from scratch.
+- Update the existing project's UI while preserving its backend and working functionality.
+
+The result should be visually impressive, clean, responsive, easy to navigate, and suitable for a production e-commerce application.
+
+---
+
+## 2. EXISTING TECHNOLOGY STACK
+
+Preserve the existing technology stack:
+
+- Python
+- Django
+- Django Templates
+- HTML5
+- CSS3
+- JavaScript
+- Bootstrap 5, if already used
+- MySQL
+- Razorpay payment integration
+
+Do not introduce React, Next.js, or another frontend framework.
+
+Do not replace Django templates with a different architecture.
+
+Reuse the existing models, views, URLs, forms, authentication, shopping cart, checkout, payment integration, and order management.
+
+Modify Python code only when necessary to support the new UI or fix a related integration issue.
+
+The redesign must work with the existing application.
+
+---
+
+## 3. VISUAL DESIGN SYSTEM
+
+Create a professional visual identity for AmoCart inspired by modern Indian e-commerce websites.
+
+### Color palette
+
+Use these colors consistently:
+
+- Primary blue: #2874F0
+- Deep blue: #172337
+- White: #FFFFFF
+- Page background: #F1F3F6
+- Primary text: #212121
+- Secondary text: #878787
+- Border color: #E0E0E0
+- Success green: #388E3C
+- Sale accent: #FB641B
+- Light blue: #EAF2FF
+
+Use blue for the header, primary buttons, active navigation, and important actions.
+
+Use white for product cards, category sections, navigation panels, and content surfaces.
+
+Use a light grey background behind the main content to create clear separation between sections.
+
+Use green for available discounts or positive order states only where appropriate.
+
+Use orange sparingly for special offers and important sale-related information.
+
+### Typography
+
+Use a clean, readable font such as Inter or a suitable system font stack.
+
+Typography should have:
+- Clear heading hierarchy
+- Readable product names
+- Prominent prices
+- Consistent font weights
+- Appropriate line heights
+- Comfortable spacing
+
+### General UI rules
+
+- Use consistent spacing throughout the website.
+- Use subtle borders and shadows.
+- Avoid excessive gradients.
+- Avoid unnecessary animations.
+- Avoid oversized rounded cards.
+- Use compact product cards similar to established shopping websites.
+- Keep the shopping experience focused on product discovery and conversion.
+- Ensure accessible contrast and keyboard navigation.
+
+---
+
+## 4. RESPONSIVE TOP HEADER
+
+Redesign the website header as a modern, Flipkart-inspired e-commerce header.
+
+Create a primary blue header with a maximum content width and responsive layout.
+
+### Desktop header
+
+Left section:
+- AmoCart logo
+- Small tagline such as "Shop Smart. Live Better."
+
+Center section:
+- Large product search bar
+- Search icon
+- Search placeholder: "Search for products, brands and more..."
+
+Right section:
+- Login or Account button
+- Cart icon with item count
+- Optional wishlist shortcut
+- Optional customer support shortcut
+
+### Header behavior
+
+- Keep the header visually consistent across all public shopping pages.
+- Make the search field prominent.
+- Support searching by product name.
+- Display useful search results using existing product data.
+- Provide a clear search button.
+- Preserve the existing Django search functionality.
+
+### Authentication states
+
+When a visitor is not logged in:
+- Show a Login button.
+- Clicking Login opens the existing login page or a well-designed login modal.
+
+When a customer is logged in:
+- Show an Account menu.
+- Include My Profile, My Orders, Addresses, and Logout.
+- Display the customer's name when appropriate.
+
+### Cart
+
+Display a cart icon with a dynamic item count.
+
+The count must come from the actual Django cart data or session cart.
+
+Do not hardcode cart counts.
+
+On mobile, ensure the search field and cart remain accessible.
+
+---
+
+## 5. CATEGORY NAVIGATION BAR
+
+Below the primary header, create a white category navigation strip.
+
+Display categories using compact icons or category images and short labels.
+
+Suggested categories:
+- Electronics
+- Fashion
+- Home & Furniture
+- Beauty
+- Grocery
+- Sports
+- Accessories
+- More Categories
+
+IMPORTANT:
+These are suggested categories, not mandatory database records.
+
+Use categories that actually exist in the AmoCart database.
+
+Do not create fake categories or assume the store sells products that have not been configured.
+
+### Category behavior
+
+- Clicking a category opens the appropriate category page.
+- Active categories have a clear visual state.
+- Long category names should not break the layout.
+- Use a responsive horizontal scroll on smaller screens.
+- Add a dropdown or category menu when many categories exist.
+
+---
+
+## 6. HOME PAGE REDESIGN
+
+Create a professional e-commerce homepage with the following sections.
+
+### Section 1: Category shortcuts
+
+Display a white category panel immediately below the header.
+
+Each category shortcut should contain:
+- Category icon or image
+- Category name
+- Clickable navigation
+
+Keep the layout compact and organized.
+
+### Section 2: Hero promotional banner
+
+Create a large promotional banner below the category navigation.
+
+Design:
+- Large landscape banner
+- Strong headline
+- Short supporting text
+- Clear shopping CTA
+- High-quality product imagery
+- Responsive layout
+
+Example copy:
+
+Headline:
+"Your Next Favorite Find Starts Here"
+
+Supporting text:
+"Explore great products for everyday living."
+
+Button:
+"Shop Now"
+
+The button must navigate to the actual product listing page.
+
+Use real promotional images configured for AmoCart.
+
+If no promotional images exist, create a visually polished CSS-based banner with a suitable product image placeholder rather than referencing nonexistent files.
+
+Do not invent real discounts or product claims.
+
+### Optional banner carousel
+
+If multiple banners are available:
+- Implement an automatic carousel.
+- Include previous and next controls.
+- Include pagination indicators.
+- Pause or reduce automatic movement when appropriate.
+- Support touch gestures on mobile.
+- Provide accessible labels.
+
+Avoid excessive movement.
+
+### Section 3: Featured categories
+
+Display popular product categories in a horizontally organized panel.
+
+Each category card should contain:
+- Category image
+- Category name
+- Optional short description
+
+Clicking a card must navigate to its real category page.
+
+### Section 4: Deals and offers
+
+Create a promotional section titled:
+
+"Deals You Don't Want to Miss"
+
+Include:
+- Product image
+- Product name
+- Actual selling price
+- Original price, if configured
+- Discount percentage, if valid
+- Product detail link
+- Add to Cart button
+
+Show only real products.
+
+Never invent discounts.
+
+Calculate the discount from the actual original and selling prices.
+
+Do not display a discount if no valid discount exists.
+
+### Section 5: Bestselling products
+
+Create a product carousel titled:
+
+"Best Sellers"
+
+Use genuine order-item data to determine best-selling products when sufficient order data exists.
+
+If the application has no sales history, display a neutral section such as "Popular Picks" using an explicitly defined fallback, without falsely claiming that products are proven bestsellers.
+
+Each product card should be reusable throughout the application.
+
+### Section 6: New arrivals
+
+Create a section titled:
+
+"Fresh Finds"
+
+Display recently created active products.
+
+Use Django ordering based on product creation time.
+
+### Section 7: Recommended products
+
+Create a section titled:
+
+"Recommended for You"
+
+Use simple recommendations based on actual available information, such as product categories or recently viewed products, if supported.
+
+If the customer is anonymous or no recommendation data exists, display a generic collection of active products.
+
+### Section 8: Trust and service highlights
+
+Add a compact service-information section where applicable:
+- Secure Payments
+- Reliable Order Tracking
+- Customer Support
+- Easy Returns, only if a return policy is implemented
+
+Do not promise services that the business has not configured.
+
+### Section 9: Footer
+
+Create a professional multi-column footer with:
+- About AmoCart
+- Customer Support
+- Contact
+- Shopping Information
+- Shipping Policy
+- Returns and Refunds
+- Privacy Policy
+- Terms and Conditions
+
+Use valid Django URLs or existing static pages.
+
+Do not leave links pointing to nonexistent pages.
+
+---
+
+## 7. REUSABLE PRODUCT CARD DESIGN
+
+Create a reusable Django template partial for product cards.
+
+Suggested file:
+templates/store/includes/product_card.html
+
+Use the same component in:
+- Home page
+- Category page
+- Search results
+- Product listing page
+- Related products
+- Bestselling products
+- New arrivals
+
+### Product card layout
+
+Top:
+- Product image
+- Optional valid discount badge
+- Optional wishlist button
+
+Middle:
+- Product name
+- Optional short description
+- Availability indicator
+
+Bottom:
+- Current price
+- Original price, if discounted
+- Rating only if real review data exists
+- Add to Cart button
+- View Details action
+
+### Hover behavior
+
+On desktop:
+- Add a subtle card shadow.
+- Slightly emphasize the product image.
+- Keep actions clear.
+
+On mobile:
+- Avoid hover-dependent functionality.
+- Keep all primary actions accessible.
+
+### Product image behavior
+
+- Maintain consistent image dimensions.
+- Use object-fit: contain for products where it is appropriate.
+- Use object-fit: cover for lifestyle imagery.
+- Use a fallback image when a product image is missing.
+- Prevent broken image icons.
+- Optimize image loading.
+
+### Product card requirements
+
+- Use actual Django product objects.
+- Use correct product URLs.
+- Use the actual stock status.
+- Use server-calculated prices.
+- Never hardcode product names, prices, or discounts.
+
+---
+
+## 8. PRODUCT LISTING PAGE
+
+Redesign the shop page to resemble a professional large-scale shopping catalog.
+
+### Layout
+
+Desktop:
+- Breadcrumb navigation
+- Left sidebar for filters
+- Main product grid
+- Sort controls
+- Product count
+
+### Sidebar filters
+
+Include supported filters:
+- Category
+- Minimum price
+- Maximum price
+- Availability
+
+Optional filters should only appear if the underlying data supports them.
+
+### Sorting
+
+Provide:
+- Relevance
+- Price: Low to High
+- Price: High to Low
+- Newest First
+
+Only implement relevance if a meaningful search-ranking strategy exists.
+
+### Product grid
+
+Desktop:
+- Four or five columns depending on available width.
+
+Tablet:
+- Two or three columns.
+
+Mobile:
+- Two columns when product cards remain readable.
+- One column only when necessary.
+
+### Additional requirements
+
+- Preserve pagination.
+- Preserve existing query parameters when practical.
+- Show selected filter values.
+- Provide a Clear Filters button.
+- Display a friendly empty state.
+- Keep the page fast and responsive.
+
+---
+
+## 9. PRODUCT DETAILS PAGE
+
+Create a clean product detail layout.
+
+### Desktop
+
+Left:
+- Main product image
+- Thumbnail gallery when multiple images exist
+
+Right:
+- Product name
+- Price
+- Valid discount information
+- Availability
+- Product description
+- Quantity selector
+- Add to Cart button
+- Buy Now button, if implemented
+
+Below:
+- Product details
+- Specifications, when available
+- Related products
+
+### Buttons
+
+Primary:
+"Add to Cart"
+
+Secondary:
+"Buy Now"
+
+Behavior:
+- Add to Cart uses the existing cart workflow.
+- Buy Now adds or selects the product and proceeds through the existing checkout process.
+- Unauthenticated visitors can browse and add to cart.
+- Checkout requires authentication.
+- Stock validation remains server-side.
+
+Do not bypass the existing authentication or Razorpay payment flow.
+
+---
+
+## 10. CART PAGE REDESIGN
+
+Create a clean shopping cart interface.
+
+Desktop:
+- Main cart items panel on the left.
+- Order summary panel on the right.
+
+Each cart item:
+- Product image
+- Product name
+- Unit price
+- Quantity controls
+- Item subtotal
+- Remove button
+
+Order summary:
+- Item subtotal
+- Discounts, if applicable
+- Shipping charges
+- Final total
+- Continue Shopping
+- Proceed to Checkout
+
+Mobile:
+- Stack the cart items and order summary.
+- Keep the checkout action prominent.
+- Ensure quantity controls remain easy to use.
+
+Use the existing Django cart logic.
+
+Do not calculate authoritative prices only in JavaScript.
+
+Display useful empty-cart guidance when no items exist.
+
+---
+
+## 11. LOGIN AND REGISTRATION UI
+
+Redesign the existing login and registration pages.
+
+Use a modern two-panel layout on desktop.
+
+Left panel:
+- AmoCart branding
+- Promotional shopping image or illustration
+- Short welcome message
+
+Right panel:
+- Login or registration form
+
+Login fields:
+- Email
+- Password
+- Show/hide password
+- Forgot password
+- Login button
+- Create account link
+
+Registration fields:
+- Full name
+- Email
+- Password
+- Confirm password
+- Optional phone number
+
+On mobile:
+- Use a single-column form.
+- Keep fields full width.
+- Ensure buttons are easy to tap.
+
+Preserve Django authentication, validation, CSRF protection, and error handling.
+
+Do not replace working authentication logic with frontend-only validation.
+
+---
+
+## 12. WELCOME POPUP REDESIGN
+
+Preserve the existing first-visit welcome popup and improve its visual design.
+
+Design:
+- Centered modal
+- Clean white background
+- AmoCart brand mark
+- Friendly welcome headline
+- Brief supporting message
+- Two clear buttons
+
+Headline:
+"Welcome to AmoCart"
+
+Description:
+"Discover products you'll love. Start exploring or sign in for a personalized shopping experience."
+
+Primary button:
+"Continue Without Login"
+
+Secondary button:
+"Sign In with Email"
+
+Requirements:
+- Use an accessible modal.
+- Support keyboard navigation.
+- Provide a visible close option where appropriate.
+- Close the popup when a valid action is selected.
+- Do not show it repeatedly during normal navigation.
+- Preserve the selected popup behavior using the existing persistence strategy.
+- Do not require authentication to browse products.
+- Do not remove the requirement to authenticate before checkout.
+
+---
+
+## 13. CHECKOUT PAGE REDESIGN
+
+Create a trustworthy, distraction-free checkout page.
+
+### Checkout sections
+
+1. Customer information
+2. Shipping address
+3. Order items
+4. Price summary
+5. Payment method
+6. Place Order / Pay Now action
+
+Display:
+- Product subtotal
+- Shipping charges
+- Discounts
+- Final payable amount
+
+### Checkout behavior
+
+- Require customer authentication.
+- Preserve the cart.
+- Validate the shipping address.
+- Recalculate totals on the server.
+- Validate stock before order placement.
+- Initiate the existing Razorpay workflow.
+- Show a clear loading state during payment initiation.
+- Prevent repeated submissions.
+- Show useful payment failure messages.
+- Redirect to the appropriate confirmation or retry page.
+
+### Razorpay styling
+
+Keep the checkout interface consistent with AmoCart branding while respecting Razorpay Checkout's supported customization options.
+
+Do not imitate or embed payment fields that should be securely handled by Razorpay.
+
+Do not change payment verification logic just to implement the new UI.
+
+---
+
+## 14. CUSTOMER ACCOUNT AND ORDER TRACKING UI
+
+Redesign the account area with a dashboard-style layout.
+
+Desktop:
+- Left navigation sidebar
+- Main content panel
+
+Sidebar:
+- My Profile
+- My Addresses
+- My Orders
+- Payment History
+- Security
+- Logout
+
+### Order history
+
+Display order cards or a table containing:
+- Order number
+- Order date
+- Order amount
+- Payment status
+- Delivery status
+- View Details button
+- Track Order button
+
+### Order tracking
+
+Create a visual timeline:
+
+Order Placed
+→ Confirmed
+→ Processing
+→ Shipped
+→ Out for Delivery
+→ Delivered
+
+Use actual order status and event timestamps.
+
+Cancelled and returned orders should have appropriate alternative timelines.
+
+Make the timeline readable on mobile.
+
+Preserve existing order permissions so customers cannot view other customers' orders.
+
+---
+
+## 15. ADMIN DASHBOARD UI
+
+Redesign the custom AmoCart admin dashboard to match the storefront's professional quality while giving it a distinct administrative layout.
+
+Do not make the admin dashboard look like the customer shopping page.
+
+### Admin color palette
+
+- Sidebar: #172337
+- Primary actions: #2874F0
+- Dashboard background: #F5F7FB
+- Cards: #FFFFFF
+- Main text: #212121
+- Secondary text: #6B7280
+- Borders: #E5E7EB
+
+### Sidebar
+
+Include:
+- Overview
+- Products
+- Categories
+- Inventory
+- Customers
+- Orders
+- Payments
+- Analytics
+- Reports
+- Settings
+- Logout
+
+### Dashboard summary cards
+
+Display real database values:
+- Total Sales
+- Total Orders
+- Registered Customers
+- Total Products
+- Low-Stock Products
+- Pending Orders
+
+### Charts
+
+Use Chart.js to display:
+- Sales over time
+- Orders by status
+- Top-selling products
+- Sales by category
+
+### Admin tables
+
+Create clean, readable tables with:
+- Search
+- Filters
+- Pagination
+- Status badges
+- Action buttons
+- Empty states
+
+### Inventory interface
+
+Use clear status indicators:
+- Green: In Stock
+- Orange: Low Stock
+- Red: Out of Stock
+
+Include stock adjustment actions and inventory history.
+
+### Customers interface
+
+Display permitted customer information and relevant order summaries.
+
+### Orders interface
+
+Display:
+- Order number
+- Customer
+- Order date
+- Amount
+- Payment status
+- Order status
+- View Details action
+
+### Responsive behavior
+
+- Collapsible sidebar
+- Responsive summary cards
+- Horizontally scrollable wide tables when necessary
+- Mobile-friendly forms
+
+Keep all existing backend permission checks and business logic.
+
+---
+
+## 16. RESPONSIVE DESIGN
+
+The website must work well on:
+
+- Large desktop screens
+- Standard laptop screens
+- Tablets
+- Android phones
+- iPhones
+
+Use responsive CSS breakpoints.
+
+### Desktop
+
+- Full navigation
+- Large search bar
+- Multiple product columns
+- Side filters
+- Multi-column footer
+
+### Tablet
+
+- Compact navigation
+- Responsive product grids
+- Adapted category shortcuts
+- Simplified sidebar layouts
+
+### Mobile
+
+- Compact blue header
+- Accessible search
+- Cart shortcut
+- Horizontal category navigation
+- Two-column product grids where practical
+- Responsive product details
+- Stacked checkout layout
+- Touch-friendly controls
+- Mobile-friendly footer
+
+Optional:
+Add a fixed mobile bottom navigation bar containing:
+- Home
+- Categories
+- Cart
+- Account
+
+Ensure it does not overlap page content, checkout buttons, or other interactive elements.
+
+---
+
+## 17. INTERACTIONS AND MICRO-ANIMATIONS
+
+Use subtle, professional interactions.
+
+Examples:
+- Smooth button hover states
+- Product card hover shadows
+- Small cart count updates
+- Loading indicators
+- Dropdown transitions
+- Toast notifications
+- Modal transitions
+- Clear focus states
+
+Keep animations lightweight.
+
+Respect the user's reduced-motion preference.
+
+Avoid excessive animations that slow down shopping.
+
+Do not use animations as a replacement for actual functionality.
+
+---
+
+## 18. DJANGO TEMPLATE ARCHITECTURE
+
+Reuse existing templates wherever possible.
+
+Create or update shared components such as:
+
+templates/
+    base.html
+    includes/
+        header.html
+        category_nav.html
+        footer.html
+        welcome_modal.html
+        messages.html
+        mobile_nav.html
+    store/
+        home.html
+        product_list.html
+        product_detail.html
+        category.html
+        includes/
+            product_card.html
+    cart/
+        cart.html
+    checkout/
+        checkout.html
+    accounts/
+        login.html
+        register.html
+        profile.html
+        orders.html
+    dashboard/
+        base.html
+        overview.html
+        products.html
+        inventory.html
+        customers.html
+        orders.html
+        payments.html
+        analytics.html
+
+Adapt this structure to the actual project rather than duplicating existing files unnecessarily.
+
+Use Django template inheritance and reusable template partials.
+
+Keep styles organized in appropriate CSS files.
+
+Suggested static assets:
+
+static/
+    css/
+        base.css
+        header.css
+        home.css
+        products.css
+        cart.css
+        checkout.css
+        accounts.css
+        dashboard.css
+        responsive.css
+    js/
+        main.js
+        welcome_modal.js
+        cart.js
+        product_gallery.js
+        dashboard_charts.js
+
+Do not duplicate CSS and JavaScript across every page.
+
+---
+
+## 19. PRESERVE EXISTING FUNCTIONALITY
+
+This is a UI redesign of an existing application, not a replacement project.
+
+Before making changes:
+
+1. Inspect the existing directory structure.
+2. Read the current Django settings.
+3. Inspect existing models.
+4. Inspect the current URL configuration.
+5. Inspect views and forms.
+6. Inspect all relevant templates.
+7. Identify existing CSS and JavaScript.
+8. Identify the current authentication flow.
+9. Identify the cart implementation.
+10. Identify the Razorpay integration.
+11. Identify the order and inventory workflows.
+12. Identify existing dashboard functionality.
+
+Then map each existing feature to the redesigned UI.
+
+Preserve:
+- Existing database
+- Existing model names
+- Existing URL names where practical
+- Existing authentication
+- Existing product functionality
+- Existing shopping cart
+- Existing checkout
+- Existing Razorpay integration
+- Existing order tracking
+- Existing inventory management
+- Existing customer records
+- Existing analytics
+
+Do not delete working code simply because a new design is easier to implement another way.
+
+Do not reset the database.
+
+Do not remove migrations.
+
+Do not replace existing database records with demo data.
+
+Do not change business logic unnecessarily.
+
+If a backend change is essential, explain why before implementing it.
+
+---
+
+## 20. PERFORMANCE AND ACCESSIBILITY
+
+Ensure:
+- Optimized image loading
+- Lazy loading for below-the-fold images
+- Proper image dimensions
+- Minimal unnecessary JavaScript
+- Reusable CSS
+- Efficient Django template rendering
+- Pagination for large product lists
+- Accessible form labels
+- Keyboard-accessible menus and modals
+- Visible focus indicators
+- Appropriate color contrast
+- Meaningful alternative text
+- Accessible button names
+- Responsive layouts without horizontal overflow
+
+Avoid making every section dependent on large external image files.
+
+Use local assets where available.
+
+Do not expose internal errors or sensitive information in the interface.
+
+---
+
+## 21. IMPLEMENTATION WORKFLOW
+
+Complete the redesign in the following order.
+
+### Phase 1: Project inspection
+Inspect the existing project and identify templates, CSS, JavaScript, views, and URLs that require updates.
+
+### Phase 2: Global design system
+Implement colors, typography, spacing, buttons, forms, cards, and shared layout styles.
+
+### Phase 3: Header and navigation
+Update the main header, search bar, account menu, cart count, category navigation, and welcome popup.
+
+### Phase 4: Homepage
+Implement the hero banner, category shortcuts, promotional sections, product carousels, and footer.
+
+### Phase 5: Product pages
+Redesign product listing, filters, product cards, category pages, and product details.
+
+### Phase 6: Cart and checkout
+Update cart and checkout layouts without breaking authentication, inventory validation, or Razorpay.
+
+### Phase 7: Customer pages
+Update login, registration, profile, order history, and order tracking.
+
+### Phase 8: Admin dashboard
+Redesign dashboard cards, tables, charts, navigation, inventory management, customer management, and order management.
+
+### Phase 9: Responsive optimization
+Test desktop, tablet, and mobile layouts.
+
+### Phase 10: Functional verification
+Test every important button, link, form, filter, modal, cart action, checkout step, and admin action.
+
+Fix visual regressions and functional issues before completion.
+
+---
+
+## 22. STRICT CODE GENERATION RULES
+
+1. Work with the existing project files.
+2. Do not rebuild the application from scratch.
+3. Do not change the technology stack.
+4. Do not create unnecessary duplicate templates.
+5. Do not hardcode products or prices.
+6. Do not hardcode analytics values.
+7. Do not remove working authentication.
+8. Do not bypass checkout authentication.
+9. Do not break Razorpay integration.
+10. Do not change database models unnecessarily.
+11. Use existing Django URL names and models wherever possible.
+12. Make all template links point to valid routes.
+13. Preserve CSRF protection.
+14. Keep customer and admin permissions intact.
+15. Provide complete updated files, not disconnected code fragments.
+16. State the exact file path for every change.
+17. Explain any required package installation.
+18. Do not delete existing code without a clear reason.
+19. Avoid adding placeholder buttons that do nothing.
+20. Test the updated application after each phase.
+
+If the project is connected to a coding environment, inspect and edit the actual files.
+
+If the project files are not available, ask me to provide the project directory or relevant files rather than guessing their current contents.
+
+If the implementation is too large for one response, divide it into numbered phases and maintain consistency between them.
+
+---
+
+## 23. FINAL ACCEPTANCE CRITERIA
+
+The redesign is complete when:
+
+- AmoCart has a professional Flipkart-inspired shopping layout.
+- The blue-and-white visual theme is consistent.
+- The header and search bar work.
+- Product categories load from the database.
+- The homepage displays real products.
+- Product cards are reusable.
+- Search and filters work.
+- Product details display correctly.
+- The welcome popup works.
+- Anonymous browsing works.
+- The cart displays actual session or database data.
+- Login and registration work.
+- Checkout still requires authentication.
+- Razorpay payment integration remains functional.
+- Order tracking works.
+- The admin dashboard looks professional.
+- Inventory management works.
+- Customer information is displayed securely.
+- Analytics use actual database records.
+- The design is responsive.
+- No existing database records are lost.
+- No major functionality is broken.
+
+Now begin by inspecting the existing AmoCart project and preparing a file-by-file UI redesign plan. After that, implement the changes in phases and test each phase before continuing.
